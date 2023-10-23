@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quizz_app/pages/home_page.dart';
 import 'package:flutter_quizz_app/values/app_assets.dart';
 import 'package:flutter_quizz_app/values/app_colors.dart';
 import 'package:flutter_quizz_app/values/app_styles.dart';
@@ -48,10 +49,13 @@ class LandingPage extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 150),
+                padding: const EdgeInsets.only(bottom: 170),
                 child: RawMaterialButton(
                   onPressed: () {
-                    // Xử lý khi nút được nhấn
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (_) => HomePage()),
+                        (route) => false);
                   },
                   child: Image.asset(AppAssest.rightArrow),
                   fillColor: AppColor.lightBlue,
