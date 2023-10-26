@@ -55,6 +55,51 @@ class _HomePageState extends State<HomePage> {
                       decoration: BoxDecoration(
                           color: AppColor.primaryColor,
                           borderRadius: BorderRadius.all(Radius.circular(24))),
+                      child: Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.centerRight,
+                            child: Image.asset(AppAssest.heart),
+                            padding: EdgeInsets.all(16),
+                          ),
+                          RichText(
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.start, // dồn chữ về bên trái
+                              text: TextSpan(
+                                  text: 'B',
+                                  style: TextStyle(
+                                      fontFamily: FontFamily.sen,
+                                      fontSize: 89,
+                                      fontWeight: FontWeight.bold,
+                                      shadows: [
+                                        BoxShadow(
+                                            color: Colors.black38,
+                                            offset: Offset(3, 6)),
+                                      ]),
+                                  children: [
+                                    TextSpan(
+                                      text: 'eautiful',
+                                      style: TextStyle(
+                                          fontFamily: FontFamily.sen,
+                                          fontSize: 56,
+                                          fontWeight: FontWeight.bold,
+                                          shadows: [
+                                            BoxShadow(
+                                                color: Colors.black38,
+                                                offset: Offset(3, 6)),
+                                          ]),
+                                    ),
+                                  ])),
+                          Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: Text(
+                              '"Think of all the beauty still left around you and be happy."',
+                              style: AppStyles.h4.copyWith(letterSpacing: 1),
+                            ),
+                          )
+                        ],
+                      ),
                     );
                   }),
             ),
@@ -62,6 +107,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        //thuộc tính này thường được dùng làm nút góc phải điện thoại
         onPressed: () {},
         child: Image.asset(AppAssest.exchange),
         backgroundColor: AppColor.primaryColor,
