@@ -11,9 +11,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0;
+  PageController _pageController = PageController();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size; // lay size ra
+
     return Scaffold(
       backgroundColor: AppColor.secondColor,
       appBar: AppBar(
@@ -47,6 +50,13 @@ class _HomePageState extends State<HomePage> {
             Container(
               height: size.height * 2 / 3,
               child: PageView.builder(
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentIndex = index;
+                    });
+                  },
+
                   // tạo ra kiểu lướt list
                   itemCount: 5, // số lần lướt
                   itemBuilder: (context, index) {
@@ -103,6 +113,18 @@ class _HomePageState extends State<HomePage> {
                     );
                   }),
             ),
+            SizedBox(
+              height: size.height * 1 / 14,
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 24),
+                alignment: Alignment.center,
+                child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return buidIndicator(index == _currentIndex, size);
+                    }),
+              ),
+            ),
           ],
         ),
       ),
@@ -112,6 +134,21 @@ class _HomePageState extends State<HomePage> {
         child: Image.asset(AppAssest.exchange),
         backgroundColor: AppColor.primaryColor,
       ),
+    );
+  }
+
+  Widget buidIndicator(bool isActive, Size size) {
+    return Container(
+      height: 08,
+      margin: EdgeInsets.symmetric(horizontal: 24),
+      width: isActive ? size.width * 1 / 5 : 24,
+      decoration: BoxDecoration(
+          color: isActive ? AppColor.lightBlue : AppColor.lightGrey,
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black38, offset: Offset(2, 3), blurRadius: 3)
+          ]),
     );
   }
 }
