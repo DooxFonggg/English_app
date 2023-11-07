@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quizz_app/packages/quote/quote.dart';
 import 'package:flutter_quizz_app/pages/landing_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Quotes().getAll();
   runApp(MyApp());
 }
 

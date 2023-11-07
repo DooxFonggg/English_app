@@ -1,7 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_quizz_app/models/english_today.dart';
+import 'package:flutter_quizz_app/packages/quote/qoute_model.dart';
+import 'package:flutter_quizz_app/packages/quote/quote.dart';
 import 'package:flutter_quizz_app/values/app_assets.dart';
 import 'package:flutter_quizz_app/values/app_colors.dart';
 import 'package:flutter_quizz_app/values/app_styles.dart';
+import 'package:english_words/english_words.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,11 +19,55 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   late PageController _pageController;
+  // khoi tao list danh sach tu moi
+  List<englishToday> words = [];
+  String quote = Quotes().getRandom().content!;
+  // hàm ramdom ra các từ
+  List<int> fixedListRamdom({int len = 1, int max = 120, int min = 1}) {
+    if (len > max || len < min) {
+      return [];
+    }
+    List<int> newList = [];
+
+    Random random = Random();
+    int count = 1;
+    while (count <= len) {
+      int val = random.nextInt(max);
+      if (newList.contains(val)) {
+        continue;
+      } else {
+        newList.add(val);
+        count++;
+      }
+    }
+    return newList;
+  }
+
+  getEnglishToday() {
+    List<String> newList = [];
+    List<int> rans = fixedListRamdom(len: 5, max: nouns.length);
+    rans.forEach((index) {
+      newList.add(nouns[index]);
+    });
+
+    words = newList.map((e) => getQuote(e)).toList();
+  }
+
+  englishToday getQuote(String noun) {
+    Quote? quote = Quotes().getByWord(noun);
+    return englishToday(
+      noun: noun,
+      quote: quote?.content,
+      id: quote?.id,
+    );
+  }
+
   @override
   void initState() {
     _pageController = PageController(viewportFraction: 0.9);
     // TODO: implement initState
     super.initState();
+    getEnglishToday();
   }
 
   @override
@@ -50,7 +100,8 @@ class _HomePageState extends State<HomePage> {
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(horizontal: 24),
               child: Text(
-                '"It is amazing how complete is the delusion that beauty is goodness."',
+                // '"It is amazing how complete is the delusion that beauty is goodness."'
+                '"$quote"',
                 style: AppStyles.h6
                     .copyWith(fontSize: 12, color: AppColor.textColor),
               ),
@@ -64,10 +115,24 @@ class _HomePageState extends State<HomePage> {
                       _currentIndex = index;
                     });
                   },
-
                   // tạo ra kiểu lướt list
-                  itemCount: 5, // số lần lướt
+                  itemCount: words.length, // số lần lướt
                   itemBuilder: (context, index) {
+                    String firsLetter =
+                        words[index].noun != null ? words[index].noun! : '';
+                    firsLetter = firsLetter.substring(0, 1);
+
+                    String leftLettter =
+                        words[index].noun != null ? words[index].noun! : '';
+                    leftLettter = leftLettter.substring(1, leftLettter.length);
+
+                    String quoteDefault =
+                        "Think of all the beauty still left around you and be happy";
+
+                    String qoute = words[index].quote != null
+                        ? words[index].quote!
+                        : quoteDefault;
+                    print(qoute);
                     // index hiển thị số trang đã lướt đến
                     return Padding(
                       padding: const EdgeInsets.all(4.0),
@@ -95,7 +160,7 @@ class _HomePageState extends State<HomePage> {
                                 textAlign:
                                     TextAlign.start, // dồn chữ về bên trái
                                 text: TextSpan(
-                                    text: 'B',
+                                    text: firsLetter,
                                     style: TextStyle(
                                         fontFamily: FontFamily.sen,
                                         fontSize: 89,
@@ -107,7 +172,7 @@ class _HomePageState extends State<HomePage> {
                                         ]),
                                     children: [
                                       TextSpan(
-                                        text: 'eautiful',
+                                        text: leftLettter,
                                         style: TextStyle(
                                             fontFamily: FontFamily.sen,
                                             fontSize: 56,
@@ -122,7 +187,7 @@ class _HomePageState extends State<HomePage> {
                             Padding(
                               padding: const EdgeInsets.all(24),
                               child: Text(
-                                '"Think of all the beauty still left around you and be happy."',
+                                '"$qoute"',
                                 style: AppStyles.h4.copyWith(
                                     letterSpacing: 1,
                                     color: AppColor.textColor),
@@ -155,7 +220,11 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         //thuộc tính này thường được dùng làm nút góc phải điện thoại
-        onPressed: () {},
+        onPressed: () {
+          setState(() {
+            getEnglishToday();
+          });
+        },
         child: Image.asset(AppAssest.exchange),
         backgroundColor: AppColor.primaryColor,
       ),
@@ -172,7 +241,7 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.all(Radius.circular(12)),
           boxShadow: [
             BoxShadow(
-                color: Colors.black38, offset: Offset(2, 3), blurRadius: 6)
+                color: Colors.black38, offset: Offset(2, 3), blurRadius: 6),
           ]),
     );
   }
